@@ -51,24 +51,38 @@ def formatting_prompts_func(examples):
 dataset = load_dataset("json", data_files="train_michel.jsonl", split="train")
 dataset = dataset.map(formatting_prompts_func, batched=True)
 
+# Petit dataset tres uniforme: on garde une validation pour surveiller l'overfit.
+split_dataset = dataset.train_test_split(test_size=0.1, seed=42, shuffle=True)
+train_dataset = split_dataset["train"]
+eval_dataset = split_dataset["test"]
+
 # --- 4. ENTRAÎNEMENT ---
 trainer = SFTTrainer(
     model = model,
     tokenizer = tokenizer,
-    train_dataset = dataset,
+    train_dataset = train_dataset,
+    eval_dataset = eval_dataset,
     dataset_text_field = "text",
     max_seq_length = max_seq_length,
     args = TrainingArguments(
         per_device_train_batch_size = 2,
         gradient_accumulation_steps = 4,
-        warmup_steps = 5,
-        max_steps = 300,
-        learning_rate = 2e-4,
+        num_train_epochs = 3,
+        warmup_ratio = 0.05,
+        learning_rate = 5e-5,
+        weight_decay = 0.01,
+        lr_scheduler_type = "cosine",
+        max_grad_norm = 0.3,
         fp16 = False,
         bf16 = True,
-        logging_steps = 1,
+        logging_steps = 10,
+        eval_strategy = "steps",
+        eval_steps = 50,
+        save_strategy = "steps",
+        save_steps = 50,
+        save_total_limit = 2,
         output_dir = "outputs",
-        save_strategy = "no",
+        report_to = "none",
     ),
 )
 

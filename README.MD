@@ -1,184 +1,157 @@
-# Mode d'emploi
+# Toki Pona IA - Guide Complet
 
-Teste sur la configuration suivante : Ubuntu 24, RTX 4070 Ti 12 Go, RAM 32 Go, SSD 750 Go.
+Ce depot contient un pipeline complet pour:
+1. Augmenter un dataset pedagogique style Michel Thomas
+2. Fine-tuner un modele LoRA avec Unsloth
+3. Tester la qualite du modele
+4. Echanger en mode cours interactif
 
-## Compatibilite
+Le guide ci-dessous est aligne avec les scripts actuellement presents dans le projet.
 
-- Systeme d'exploitation teste : Ubuntu 24
-- GPU teste : NVIDIA GeForce RTX 4070 Ti 12 Go
-- Memoire vive testee : 32 Go
-- Stockage teste : SSD 750 Go
-- Version Python cible : 3.11
-- Cible PyTorch : CUDA 12.1
+## 1) Prerequis
 
-Installation des drivers NVIDIA (Ubuntu 24) :
+Configuration testee:
+- Ubuntu 24
+- NVIDIA GeForce RTX 4070 Ti 12 Go
+- RAM 32 Go
+- Python 3.11
 
-1. Mettre a jour l'index des paquets :
+Verifier le GPU:
 
-```bash
-sudo apt update
-```
-
-2. Installer l'outil de detection (necessaire pour disposer de la commande `ubuntu-drivers`) :
-
-```bash
-sudo apt install -y ubuntu-drivers-common
-```
-
-3. Afficher les drivers recommandes :
-
-```bash
-ubuntu-drivers devices
-```
-
-4. Installer automatiquement le driver recommande :
-
-```bash
-sudo ubuntu-drivers autoinstall
-```
-
-5. Redemarrer la machine :
-
-```bash
-sudo reboot
-```
-
-6. Verifier l'installation apres redemarrage :
-
-```bash
-nvidia-smi
-```
-
-Notes :
-- L'installation de `ubuntu-drivers-common` est requise si la commande `ubuntu-drivers` est absente.
-- En cas de Secure Boot actif, valider l'inscription de la cle MOK au redemarrage.
-- Si `autoinstall` ne convient pas, installer une version precise, par exemple `sudo apt install -y nvidia-driver-570`.
-
-Verification CUDA / driver NVIDIA :
-
-```bash
-nvidia-smi
-```
-
-Sortie indicative :
-
-```text
-+-----------------------------------------------------------------------------------------+
-| NVIDIA-SMI 570.211.01             Driver Version: 570.211.01     CUDA Version: 12.8     |
-|-----------------------------------------+------------------------+----------------------|
-| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
-|                                         |                        |               MIG M. |
-|=========================================+========================+======================|
-|   0  NVIDIA GeForce RTX 4070        Off |   00000000:01:00.0  On |                  N/A |
-|  0%   40C    P8             10W /  200W |       8MiB /  12282MiB |      0%      Default |
-|                                         |                        |                  N/A |
-+-----------------------------------------+------------------------+----------------------+
-
-+-----------------------------------------------------------------------------------------+
-| Processes:                                                                              |
-|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
-|        ID   ID                                                               Usage      |
-|=========================================================================================|
-|  No running processes found                                                             |
-+-----------------------------------------------------------------------------------------+
-```
-
-Suivi GPU en temps reel avec nvtop :
-
-```bash
-# Installation (Ubuntu)
 sudo apt update
 sudo apt install -y nvtop
-
-# Lancement
+nvidia-smi
 nvtop
-```
 
-Utilite :
-- Visualiser l'occupation GPU pendant l'entrainement ou l'inference.
-- Identifier rapidement un processus qui monopolise la VRAM.
-- Controler l'evolution de la charge et de la temperature sans relancer `nvidia-smi`.
+## 2) Environnement Python
 
-## 1. Installer Mamba via Miniforge
+Installation Miniforge/Mamba (si besoin):
 
-Cette méthode installe `mamba` par défaut et configure le dépôt Conda-Forge.
-
-1. Télécharger le script d'installation :
-
-```bash
 wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
-```
-
-2. Lancer l'installation :
-
-```bash
 bash Miniforge3-$(uname)-$(uname -m).sh
-```
-
-Pendant l'installation :
-- Appuyer sur `Entree` pour parcourir la licence.
-- Saisir `yes` pour accepter les termes.
-- Conserver l'emplacement par defaut.
-- Repondre `yes` a la mise a jour du profil shell.
-
-3. Recharger la session shell :
-
-```bash
 source ~/.bashrc
-```
 
-4. Verifier l'installation :
+Creation de l'environnement du projet:
 
-```bash
-mamba --version
-```
-
-## 2. Utiliser Mamba
-
-Remplacer `conda` par `mamba` pour les operations de resolution de paquets.
-
-- Creer un environnement : `mamba create -n mon_env python=3.10`
-- Installer des paquets : `mamba install numpy pandas`
-- Rechercher un paquet : `mamba search scipy`
-
-Activation et desactivation d'environnement : utiliser `conda activate` et `conda deactivate`.
-
-## 3. Creer l'environnement du projet
-
-```bash
-# Creer l'environnement avec Python 3.11 et pip
 mamba create -n toki_pona_ia python=3.11 pip -y
-
-# Activer l'environnement
 conda activate toki_pona_ia
-```
 
-## 4. Installer PyTorch et Unsloth
+Installation des dependances de base:
 
-```bash
-# PyTorch CUDA 12.1
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-# Unsloth
 pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
-```
+pip install datasets trl transformers peft accelerate sentencepiece
 
-## 5. Verifier l'installation GPU
+Verification rapide:
 
-```bash
-python -c "import torch; print(f'Python: {torch.__version__}'); print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"ABSENT\"}')"
-```
+python -c "import torch; print(torch.__version__); print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'GPU ABSENT')"
 
-Si le nom de la carte NVIDIA s'affiche, la configuration est operationnelle.
+## 3) Fichiers importants
 
-## 6. Rappel rapide des commandes
+- [train_michel.jsonl](train_michel.jsonl): dataset source au format messages
+- [augment_michel_dataset.py](augment_michel_dataset.py): script d'augmentation pedagogique
+- [train_toki.py](train_toki.py): fine-tuning LoRA avec split train/eval
+- [test_michel.py](test_michel.py): test batch rapide du modele fine-tune
+- [cours_michel.py](cours_michel.py): interface de cours interactif en terminal
+- [toki_lora](toki_lora): dossier de sortie final du LoRA
+- [outputs](outputs): checkpoints d'entrainement
 
-Action | Commande `conda` | Commande `mamba`
---- | --- | ---
-Creer un environnement | `conda create -n test` | `mamba create -n test`
-Installer un paquet | `conda install pytorch` | `mamba install pytorch`
-Mettre a jour | `conda update --all` | `mamba update --all`
-Activer un environnement | `conda activate ...` | `conda activate ...`
+## 4) Format de dataset attendu
+
+Chaque ligne JSONL doit contenir:
+
+{
+	"messages": [
+		{"role": "system", "content": "..."},
+		{"role": "user", "content": "..."},
+		{"role": "assistant", "content": "..."}
+	]
+}
+
+Le script [train_toki.py](train_toki.py) est actuellement configure pour lire par defaut [train_michel.jsonl](train_michel.jsonl).
+
+## 5) Augmenter le dataset
+
+Generation standard (fichier augmente):
+
+python augment_michel_dataset.py --variants-per-example 4 --keep-original --output train_michel_augmented.jsonl
+
+Options utiles:
+- --variants-per-example: nombre de variantes par exemple source
+- --keep-original: conserve les exemples initiaux
+- --seed: reproductibilite
+
+Ce script cree des variations sur:
+- niveau: debutant/intermediaire/avance
+- style de correction: courte/longue
+- exercice progressif
+- reformulation pedagogique
+
+## 6) Fine-tuning
+
+Lancer l'entrainement:
+
+python train_toki.py
+
+Comportement actuel de [train_toki.py](train_toki.py):
+- mode LoRA sur unsloth/llama-3-8b-bnb-4bit
+- split 90/10 train/eval
+- 3 epochs
+- learning rate 5e-5
+- evaluation tous les 50 steps
+- checkpoints tous les 50 steps
+- sauvegarde finale dans [toki_lora](toki_lora)
+
+Important:
+- Pour entrainer sur un dataset augmente, modifier la variable data_files dans [train_toki.py](train_toki.py) (ligne de load_dataset) vers train_michel_augmented.jsonl.
+
+## 7) Tester le modele
+
+Test batch rapide:
+
+python test_michel.py
+
+Ce script charge la base + LoRA [toki_lora](toki_lora) puis execute plusieurs prompts de verification.
+
+## 8) Cours interactif
+
+Lancer le cours terminal:
+
+python cours_michel.py
+
+Commandes disponibles dans [cours_michel.py](cours_michel.py):
+- /aide
+- /lecons
+- /lecon N
+- /suivante
+- /reset
+- /test
+- /quitter
+
+Notes:
+- Le mode reponse est en streaming token par token (generation en direct).
+- La commande /test lance une batterie de tests et affiche un score global.
+
+## 9) Depannage rapide
+
+1. Erreur CUDA ou GPU absent:
+- verifier nvidia-smi
+- verifier l'environnement actif
+- verifier la version torch CUDA
+
+2. Reponses trop repetitives:
+- augmenter la diversite du dataset via [augment_michel_dataset.py](augment_michel_dataset.py)
+- relancer un fine-tuning
+
+3. Modele non trouve:
+- verifier la presence de [toki_lora](toki_lora)
+- verifier que l'entrainement est termine sans erreur
+
+4. Verification syntaxe scripts:
+
+python -m py_compile train_toki.py
+python -m py_compile augment_michel_dataset.py
+python -m py_compile test_michel.py
+python -m py_compile cours_michel.py
 
 

@@ -31,6 +31,29 @@ LECONS = [
     "Advanced composition",
 ]
 
+TEST_CASES = [
+    {
+        "lecon": "Introduction",
+        "prompt": "Je débute totalement. Donne-moi un premier mini exercice simple.",
+    },
+    {
+        "lecon": "Basic verbs",
+        "prompt": "Comment dire 'je mange' en toki pona ? Explique vite puis donne un exercice.",
+    },
+    {
+        "lecon": "li structure",
+        "prompt": "Rappelle la regle de 'li' avec un exemple court.",
+    },
+    {
+        "lecon": "e object marker",
+        "prompt": "Montre-moi comment utiliser 'e' dans une phrase simple.",
+    },
+    {
+        "lecon": "Questions",
+        "prompt": "Fais-moi pratiquer une question en toki pona.",
+    },
+]
+
 # --- 3. CHARGEMENT DU MODÈLE ---
 print("📦 Chargement du professeur Michel Thomas virtuel...")
 
@@ -70,7 +93,7 @@ def construire_prompt(lecon_actuelle: str, historique: list[dict]) -> str:
     parties.append("### Assistant:\n")
     return "\n\n".join(parties)
 
-def repondre(lecon_actuelle: str, historique: list[dict]) -> str:
+def repondre(lecon_actuelle: str, historique: list[dict], stream: bool = True) -> str:
     prompt = construire_prompt(lecon_actuelle, historique)
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
@@ -95,10 +118,12 @@ def repondre(lecon_actuelle: str, historique: list[dict]) -> str:
         thread = Thread(target=model.generate, kwargs=generation_kwargs)
         thread.start()
 
-        print("\nProfesseur : ", end="", flush=True)
         morceaux: list[str] = []
         deja_affiche = 0
         marqueurs_stop = ["### User:", "### System:", "### Assistant:"]
+
+        if stream:
+            print("\nProfesseur : ", end="", flush=True)
 
         for morceau in streamer:
             morceaux.append(morceau)
@@ -111,7 +136,7 @@ def repondre(lecon_actuelle: str, historique: list[dict]) -> str:
                     stop_index = idx
 
             texte_affichable = texte_courant[:stop_index]
-            if len(texte_affichable) > deja_affiche:
+            if stream and len(texte_affichable) > deja_affiche:
                 print(texte_affichable[deja_affiche:], end="", flush=True)
                 deja_affiche = len(texte_affichable)
 
@@ -119,7 +144,8 @@ def repondre(lecon_actuelle: str, historique: list[dict]) -> str:
                 break
 
         thread.join()
-        print("\n")
+        if stream:
+            print("\n")
 
     reponse = "".join(morceaux)
     for stop in ["### User:", "### System:", "### Assistant:"]:
@@ -129,6 +155,63 @@ def repondre(lecon_actuelle: str, historique: list[dict]) -> str:
     if reponse == "1":
         reponse = "Très bien. Continuons: propose une phrase simple en toki pona avec 'mi'."
     return reponse
+
+def evaluer_reponse(lecon: str, reponse: str) -> tuple[int, list[str]]:
+    score = 0
+    commentaires: list[str] = []
+    r = reponse.lower()
+
+    if len(reponse.strip()) >= 25:
+        score += 1
+        commentaires.append("reponse non vide")
+
+    if "###" not in reponse and "system:" not in r and "user:" not in r:
+        score += 1
+        commentaires.append("pas de fuite de prompt")
+
+    if "toki pona" in r or "mi " in r or "li " in r or " e " in r:
+        score += 1
+        commentaires.append("contenu pertinent")
+
+    if "stress" in r or "etape" in r or "exercice" in r or "bien" in r:
+        score += 1
+        commentaires.append("style pedagogique")
+
+    if lecon.lower() in r or "lecon" in r:
+        score += 1
+        commentaires.append("ancrage lecon")
+
+    return score, commentaires
+
+def lancer_tests_modele() -> None:
+    print("\n🧪 Test rapide du modele en cours...\n")
+    total = 0
+    max_total = len(TEST_CASES) * 5
+
+    for i, case in enumerate(TEST_CASES, 1):
+        lecon = case["lecon"]
+        prompt = case["prompt"]
+        historique_test = [{"role": "user", "content": prompt}]
+
+        print(f"[{i}] Lecon cible : {lecon}")
+        print(f"    Prompt      : {prompt}")
+        rep = repondre(lecon, historique_test, stream=False)
+        print(f"    Reponse     : {rep}")
+
+        score, commentaires = evaluer_reponse(lecon, rep)
+        total += score
+        print(f"    Score       : {score}/5 ({', '.join(commentaires) if commentaires else 'aucun critere valide'})")
+        print()
+
+    ratio = 100.0 * total / max_total
+    print(f"Resultat global : {total}/{max_total} ({ratio:.1f}%)")
+    if ratio >= 80:
+        print("Diagnostic      : bon comportement global pour ce dataset.")
+    elif ratio >= 60:
+        print("Diagnostic      : correct mais encore instable sur certains cas.")
+    else:
+        print("Diagnostic      : faible. Le dataset et/ou le fine-tuning sont a renforcer.")
+    print()
 
 # --- 5. INTERFACE ---
 def afficher_lecons():
@@ -143,6 +226,7 @@ Commandes disponibles :
   /lecons       — afficher la liste des leçons
   /lecon N      — passer à la leçon numéro N
   /suivante     — passer à la leçon suivante
+    /test         — lancer une batterie de tests du modèle
   /reset        — recommencer la leçon actuelle depuis le début
   /aide         — afficher cette aide
   /quitter      — terminer la session
@@ -194,6 +278,10 @@ while True:
 
         elif cmd == "/lecons":
             afficher_lecons()
+            continue
+
+        elif cmd == "/test":
+            lancer_tests_modele()
             continue
 
         elif cmd == "/suivante":
