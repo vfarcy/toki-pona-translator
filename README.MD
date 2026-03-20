@@ -1,67 +1,141 @@
-Aïe ! On a un nouveau coupable dans l'histoire, et il est costaud : **Python 3.14**. 
+# Mode d'emploi
 
-Regarde bien la ligne : `Pinned packages: - python=3.14`. En 2026, Python 3.14 est la version ultra-récente, mais **PyTorch et Unsloth ne sont pas encore prêts pour elle**. C'est pour ça que Mamba n'arrive pas à résoudre l'équation : il cherche des paquets PyTorch pour une version de Python qui vient à peine de sortir.
+Teste sur la configuration suivante : Ubuntu 24, RTX 4070 Ti 12 Go, RAM 32 Go, SSD 750 Go.
 
-On va forcer le système à redescendre sur **Python 3.11**, qui est le "rocher" de stabilité pour l'IA.
+## Compatibilite
 
-### La Solution : Recréer l'environnement avec la bonne version
+- Systeme d'exploitation teste : Ubuntu 24
+- GPU teste : NVIDIA GeForce RTX 4070 Ti 12 Go
+- Memoire vive testee : 32 Go
+- Stockage teste : SSD 750 Go
+- Version Python cible : 3.11
+- Cible PyTorch : CUDA 12.1
 
-On va supprimer cet environnement "trop futuriste" et en créer un avec les versions exactes qu'Unsloth adore.
-
-**Tape ces commandes :**
+Verification CUDA / driver NVIDIA :
 
 ```bash
-# 1. Créer l'environnement en FORÇANT Python 3.11 et Pip dès le départ
+nvidia-smi
+```
+
+Sortie indicative :
+
+```text
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.211.01             Driver Version: 570.211.01     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------|
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4070        Off |   00000000:01:00.0  On |                  N/A |
+|  0%   40C    P8             10W /  200W |       8MiB /  12282MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+```
+
+Suivi GPU en temps reel avec nvtop :
+
+```bash
+# Installation (Ubuntu)
+sudo apt update
+sudo apt install -y nvtop
+
+# Lancement
+nvtop
+```
+
+Utilite :
+- Visualiser l'occupation GPU pendant l'entrainement ou l'inference.
+- Identifier rapidement un processus qui monopolise la VRAM.
+- Controler l'evolution de la charge et de la temperature sans relancer `nvidia-smi`.
+
+## 1. Installer Mamba via Miniforge
+
+Cette méthode installe `mamba` par défaut et configure le dépôt Conda-Forge.
+
+1. Télécharger le script d'installation :
+
+```bash
+wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+```
+
+2. Lancer l'installation :
+
+```bash
+bash Miniforge3-$(uname)-$(uname -m).sh
+```
+
+Pendant l'installation :
+- Appuyer sur `Entree` pour parcourir la licence.
+- Saisir `yes` pour accepter les termes.
+- Conserver l'emplacement par defaut.
+- Repondre `yes` a la mise a jour du profil shell.
+
+3. Recharger la session shell :
+
+```bash
+source ~/.bashrc
+```
+
+4. Verifier l'installation :
+
+```bash
+mamba --version
+```
+
+## 2. Utiliser Mamba
+
+Remplacer `conda` par `mamba` pour les operations de resolution de paquets.
+
+- Creer un environnement : `mamba create -n mon_env python=3.10`
+- Installer des paquets : `mamba install numpy pandas`
+- Rechercher un paquet : `mamba search scipy`
+
+Activation et desactivation d'environnement : utiliser `conda activate` et `conda deactivate`.
+
+## 3. Creer l'environnement du projet
+
+```bash
+# Creer l'environnement avec Python 3.11 et pip
 mamba create -n toki_pona_ia python=3.11 pip -y
 
-# 2. Activer le nouvel environnement
+# Activer l'environnement
 conda activate toki_pona_ia
 ```
 
----
-
-### Pourquoi Python 3.11 ?
-* **Compatibilité :** Tous les calculs mathématiques de ta **RTX 4070** (les kernels Triton) sont optimisés pour 3.11.
-* **Stabilité :** C'est la version utilisée par 90% des chercheurs en IA en 2026.
-
----
-
-### Étape 2 : Installer PyTorch (via Pip, pour éviter les conflits de canaux)
-
-Maintenant que tu es en 3.11, on utilise la méthode la plus fiable :
+## 4. Installer PyTorch et Unsloth
 
 ```bash
-# Installer PyTorch pour CUDA 12.1
+# PyTorch CUDA 12.1
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-# Installer Unsloth
+# Unsloth
 pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
 ```
 
----
-
-### Le Test de Vérité 🧪
-
-Une fois que c'est fini, on vérifie que tout est aligné :
+## 5. Verifier l'installation GPU
 
 ```bash
 python -c "import torch; print(f'Python: {torch.__version__}'); print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"ABSENT\"}')"
 ```
 
-**Est-ce que cette fois-ci l'installation de Python 3.11 a permis de débloquer PyTorch ?** Si le message "NVIDIA GeForce RTX 4070" s'affiche, tu as enfin franchi le dernier obstacle !
+Si le nom de la carte NVIDIA s'affiche, la configuration est operationnelle.
 
-**Veux-tu que je prépare ton premier fichier de phrases en Toki Pona pour tester l'apprentissage ?**
+## 6. Rappel rapide des commandes
 
-
-
-
-
-
-
-Action,Ancienne commande (Lente),Nouvelle commande (Rapide 🚀)
-Créer un env,conda create -n test,mamba create -n test
-Installer un truc,conda install pytorch,mamba install pytorch
-Chercher des maj,conda update --all,mamba update --all
-Activer un env,conda activate ...,conda activate ... (Celle-là reste la même !)
+Action | Commande `conda` | Commande `mamba`
+--- | --- | ---
+Creer un environnement | `conda create -n test` | `mamba create -n test`
+Installer un paquet | `conda install pytorch` | `mamba install pytorch`
+Mettre a jour | `conda update --all` | `mamba update --all`
+Activer un environnement | `conda activate ...` | `conda activate ...`
 
 
