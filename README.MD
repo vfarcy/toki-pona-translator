@@ -19,7 +19,7 @@ Installation des drivers NVIDIA (Ubuntu 24) :
 sudo apt update
 ```
 
-2. Installer l'outil de detection :
+2. Installer l'outil de detection (necessaire pour disposer de la commande `ubuntu-drivers`) :
 
 ```bash
 sudo apt install -y ubuntu-drivers-common
@@ -50,6 +50,7 @@ nvidia-smi
 ```
 
 Notes :
+- L'installation de `ubuntu-drivers-common` est requise si la commande `ubuntu-drivers` est absente.
 - En cas de Secure Boot actif, valider l'inscription de la cle MOK au redemarrage.
 - Si `autoinstall` ne convient pas, installer une version precise, par exemple `sudo apt install -y nvidia-driver-570`.
 
