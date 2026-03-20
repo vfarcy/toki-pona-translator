@@ -1,5 +1,8 @@
 import torch
 import sys
+import warnings
+
+warnings.filterwarnings("ignore")
 
 # --- 1. PATCH DE SECOURS (A EXÉCUTER AVANT TOUT IMPORT) ---
 # On simule la présence de int1 à int7 pour satisfaire torchao
@@ -58,7 +61,7 @@ def traduire(text):
 # --- 4. BOUCLE ---
 print("\n--- TRADUCTEUR TOKI PONA ACTIF ---")
 while True:
-    phrase = input("Anglais > ")
+    phrase = input("Français > ")
     if phrase.lower() in ["exit", "quit"]: break
     print(f"Toki Pona > {traduire(phrase)}\n")
 
