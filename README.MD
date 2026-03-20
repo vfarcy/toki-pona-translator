@@ -11,6 +11,48 @@ Teste sur la configuration suivante : Ubuntu 24, RTX 4070 Ti 12 Go, RAM 32 Go, S
 - Version Python cible : 3.11
 - Cible PyTorch : CUDA 12.1
 
+Installation des drivers NVIDIA (Ubuntu 24) :
+
+1. Mettre a jour l'index des paquets :
+
+```bash
+sudo apt update
+```
+
+2. Installer l'outil de detection :
+
+```bash
+sudo apt install -y ubuntu-drivers-common
+```
+
+3. Afficher les drivers recommandes :
+
+```bash
+ubuntu-drivers devices
+```
+
+4. Installer automatiquement le driver recommande :
+
+```bash
+sudo ubuntu-drivers autoinstall
+```
+
+5. Redemarrer la machine :
+
+```bash
+sudo reboot
+```
+
+6. Verifier l'installation apres redemarrage :
+
+```bash
+nvidia-smi
+```
+
+Notes :
+- En cas de Secure Boot actif, valider l'inscription de la cle MOK au redemarrage.
+- Si `autoinstall` ne convient pas, installer une version precise, par exemple `sudo apt install -y nvidia-driver-570`.
+
 Verification CUDA / driver NVIDIA :
 
 ```bash
