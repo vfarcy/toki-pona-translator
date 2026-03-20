@@ -33,17 +33,23 @@ model = FastLanguageModel.get_peft_model(
 
 # --- 3. FORMATAGE ET DONNÉES ---
 def formatting_prompts_func(examples):
-    instructions = examples["instruction"]
-    inputs       = examples["input"]
-    outputs      = examples["output"]
     texts = []
-    for instruction, input, output in zip(instructions, inputs, outputs):
-        text = f"### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n{output}"
-        texts.append(text)
+    for messages in examples["messages"]:
+        parts = []
+        for msg in messages:
+            role = msg["role"]
+            content = msg["content"]
+            if role == "system":
+                parts.append(f"### System:\n{content}")
+            elif role == "user":
+                parts.append(f"### User:\n{content}")
+            elif role == "assistant":
+                parts.append(f"### Assistant:\n{content}")
+        texts.append("\n\n".join(parts) + tokenizer.eos_token)
     return { "text" : texts, }
 
-dataset = load_dataset("json", data_files="dataset.jsonl", split="train")
-dataset = dataset.map(formatting_prompts_func, batched = True)
+dataset = load_dataset("json", data_files="train_michel.jsonl", split="train")
+dataset = dataset.map(formatting_prompts_func, batched=True)
 
 # --- 4. ENTRAÎNEMENT ---
 trainer = SFTTrainer(
