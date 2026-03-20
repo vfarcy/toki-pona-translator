@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+unsloth_compiled_cache/
+
+# Données lourdes
+outputs/
+toki_lora/
+huggingface_cache/
+
+# Environnement
+.ipynb_checkpoints/
+
