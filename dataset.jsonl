@@ -1,51 +1,54 @@
-{"instruction": "Traduire en Toki Pona", "input": "I am going.", "output": "mi tawa."}
-{"instruction": "Traduire en Toki Pona", "input": "You are eating.", "output": "sina moku."}
-{"instruction": "Traduire en Toki Pona", "input": "The water is cold.", "output": "telo li lete."}
-{"instruction": "Traduire en Toki Pona", "input": "The sun is hot.", "output": "suno li seli."}
-{"instruction": "Traduire en Toki Pona", "input": "I am good.", "output": "mi pona."}
-{"instruction": "Traduire en Toki Pona", "input": "You are small.", "output": "sina lili."}
-{"instruction": "Traduire en Toki Pona", "input": "The man is big.", "output": "jan li suli."}
-{"instruction": "Traduire en Toki Pona", "input": "I have a cat.", "output": "mi jo e soweli."}
-{"instruction": "Traduire en Toki Pona", "input": "The fruit is good.", "output": "kili li pona."}
-{"instruction": "Traduire en Toki Pona", "input": "I see the moon.", "output": "mi lukin e mun."}
-{"instruction": "Traduire en Toki Pona", "input": "The room is dark.", "output": "tomo li pimeja."}
-{"instruction": "Traduire en Toki Pona", "input": "I drink water.", "output": "mi moku e telo."}
-{"instruction": "Traduire en Toki Pona", "input": "The bird is flying.", "output": "waso li tawa kon."}
-{"instruction": "Traduire en Toki Pona", "input": "You are my friend.", "output": "sina jan pona mi."}
-{"instruction": "Traduire en Toki Pona", "input": "The fire is big.", "output": "seli li suli."}
-{"instruction": "Traduire en Toki Pona", "input": "I want food.", "output": "mi wile e moku."}
-{"instruction": "Traduire en Toki Pona", "input": "The stone is hard.", "output": "kiwen li kiwen."}
-{"instruction": "Traduire en Toki Pona", "input": "I sleep in the house.", "output": "mi lape lon tomo."}
-{"instruction": "Traduire en Toki Pona", "input": "The path is long.", "output": "nasin li suli."}
-{"instruction": "Traduire en Toki Pona", "input": "You speak well.", "output": "sina toki pona."}
-{"instruction": "Traduire en Toki Pona", "input": "The sky is blue.", "output": "laso li lon sewi."}
-{"instruction": "Traduire en Toki Pona", "input": "I make a tool.", "output": "mi pali e ilo."}
-{"instruction": "Traduire en Toki Pona", "input": "The tree is green.", "output": "kasi li laso."}
-{"instruction": "Traduire en Toki Pona", "input": "I hear the sound.", "output": "mi kute e kalama."}
-{"instruction": "Traduire en Toki Pona", "input": "The person is sleeping.", "output": "jan li lape."}
-{"instruction": "Traduire en Toki Pona", "input": "I like the flower.", "output": "mi pona e kasi kule."}
-{"instruction": "Traduire en Toki Pona", "input": "The mountain is high.", "output": "nena li suli."}
-{"instruction": "Traduire en Toki Pona", "input": "I give a gift.", "output": "mi pana e pona."}
-{"instruction": "Traduire en Toki Pona", "input": "The bug is small.", "output": "pipi li lili."}
-{"instruction": "Traduire en Toki Pona", "input": "I feel happy.", "output": "mi pilin pona."}
-{"instruction": "Traduire en Toki Pona", "input": "The earth is round.", "output": "ma li sike."}
-{"instruction": "Traduire en Toki Pona", "input": "I use the computer.", "output": "mi kepeken e ilo nanpa."}
-{"instruction": "Traduire en Toki Pona", "input": "The night is quiet.", "output": "pimeja li kalama ala."}
-{"instruction": "Traduire en Toki Pona", "input": "I walk to the forest.", "output": "mi tawa ma kasi."}
-{"instruction": "Traduire en Toki Pona", "input": "The rain is falling.", "output": "telo li kama tan sewi."}
-{"instruction": "Traduire en Toki Pona", "input": "I know the secret.", "output": "mi sona e len."}
-{"instruction": "Traduire en Toki Pona", "input": "The fish is swimming.", "output": "kala li tawa lon telo."}
-{"instruction": "Traduire en Toki Pona", "input": "I help you.", "output": "mi pona e sina."}
-{"instruction": "Traduire en Toki Pona", "input": "The egg is white.", "output": "sike mama li walo."}
-{"instruction": "Traduire en Toki Pona", "input": "I write a letter.", "output": "mi sitelen e toki."}
-{"instruction": "Traduire en Toki Pona", "input": "The wind is strong.", "output": "kon li suli."}
-{"instruction": "Traduire en Toki Pona", "input": "I wait for you.", "output": "mi awen pi sina."}
-{"instruction": "Traduire en Toki Pona", "input": "The dog is barking.", "output": "soweli li kalama."}
-{"instruction": "Traduire en Toki Pona", "input": "I love life.", "output": "mi olin e ale."}
-{"instruction": "Traduire en Toki Pona", "input": "The bridge is broken.", "output": "nasin li pakala."}
-{"instruction": "Traduire en Toki Pona", "input": "I buy a book.", "output": "mi esun e lipu."}
-{"instruction": "Traduire en Toki Pona", "input": "The head is big.", "output": "lawa li suli."}
-{"instruction": "Traduire en Toki Pona", "input": "I found the key.", "output": "mi kama jo e ilo."}
-{"instruction": "Traduire en Toki Pona", "input": "The sea is deep.", "output": "telo suli li suli."}
-{"instruction": "Traduire en Toki Pona", "input": "I am a human.", "output": "mi jan."}
-
+{"instruction": "Traduire en Toki Pona", "input": "Je mange.", "output": "mi moku."}
+{"instruction": "Traduire en Toki Pona", "input": "Tu es bon.", "output": "sina pona."}
+{"instruction": "Traduire en Toki Pona", "input": "L'eau est froide.", "output": "telo li lete."}
+{"instruction": "Traduire en Toki Pona", "input": "Le soleil est chaud.", "output": "suno li seli."}
+{"instruction": "Traduire en Toki Pona", "input": "Je mange un fruit.", "output": "mi moku e kili."}
+{"instruction": "Traduire en Toki Pona", "input": "Tu vois la lune.", "output": "sina lukin e mun."}
+{"instruction": "Traduire en Toki Pona", "input": "Je vais à la maison.", "output": "mi tawa tomo."}
+{"instruction": "Traduire en Toki Pona", "input": "Je suis à la maison.", "output": "mi lon tomo."}
+{"instruction": "Traduire en Toki Pona", "input": "Le chat dort sur la table.", "output": "soweli li lape lon supa."}
+{"instruction": "Traduire en Toki Pona", "input": "C'est mon livre.", "output": "ni li lipu mi."}
+{"instruction": "Traduire en Toki Pona", "input": "Ton ami est grand.", "output": "jan pona sina li suli."}
+{"instruction": "Traduire en Toki Pona", "input": "La petite souris mange.", "output": "soweli lili li moku."}
+{"instruction": "Traduire en Toki Pona", "input": "Je travaille avec un outil.", "output": "mi pali kepeken ilo."}
+{"instruction": "Traduire en Toki Pona", "input": "Je parle avec toi.", "output": "mi toki tawa sina."}
+{"instruction": "Traduire en Toki Pona", "input": "C'est une grande voiture rouge.", "output": "tomo tawa suli loje li ni."}
+{"instruction": "Traduire en Toki Pona", "input": "Le fruit est jaune.", "output": "kili li jelo."}
+{"instruction": "Traduire en Toki Pona", "input": "Je veux boire.", "output": "mi wile moku e telo."}
+{"instruction": "Traduire en Toki Pona", "input": "Tu dois partir.", "output": "sina wile tawa."}
+{"instruction": "Traduire en Toki Pona", "input": "Je sais parler.", "output": "mi sona toki."}
+{"instruction": "Traduire en Toki Pona", "input": "Si tu manges, tu es content.", "output": "sina moku la sina pilin pona."}
+{"instruction": "Traduire en Toki Pona", "input": "Aujourd'hui, il fait beau.", "output": "tenpo ni la suno li pona."}
+{"instruction": "Traduire en Toki Pona", "input": "Dans l'eau, il y a des poissons.", "output": "lon telo la kala li lon."}
+{"instruction": "Traduire en Toki Pona", "input": "Le chien de mon ami est noir.", "output": "soweli pi jan pona mi li pimeja."}
+{"instruction": "Traduire en Toki Pona", "input": "C'est un outil de travail.", "output": "ni li ilo pi pali pona."}
+{"instruction": "Traduire en Toki Pona", "input": "Ne mange pas ça !", "output": "o moku ala e ni!"}
+{"instruction": "Traduire en Toki Pona", "input": "Jean, viens ici.", "output": "jan Jan o, kama ni."}
+{"instruction": "Traduire en Toki Pona", "input": "Allons-y !", "output": "mi mute o tawa!"}
+{"instruction": "Traduire en Toki Pona", "input": "Est-ce que tu manges ?", "output": "sina moku ala moku?"}
+{"instruction": "Traduire en Toki Pona", "input": "Où est le chat ?", "output": "soweli li lon seme?"}
+{"instruction": "Traduire en Toki Pona", "input": "Qui es-tu ?", "output": "sina jan seme?"}
+{"instruction": "Traduire en Toki Pona", "input": "Pourquoi pleures-tu ?", "output": "tan seme la sina tan telo lukin?"}
+{"instruction": "Traduire en Toki Pona", "input": "Il y a deux oiseaux.", "output": "waso tu li lon."}
+{"instruction": "Traduire en Toki Pona", "input": "J'ai beaucoup d'argent.", "output": "mi jo e mani mute."}
+{"instruction": "Traduire en Toki Pona", "input": "C'est la première fois.", "output": "ni li tenpo nanpa wan."}
+{"instruction": "Traduire en Toki Pona", "input": "Le ciel est bleu.", "output": "sewi li laso."}
+{"instruction": "Traduire en Toki Pona", "input": "La terre est ronde.", "output": "ma li sike."}
+{"instruction": "Traduire en Toki Pona", "input": "Je ne comprends pas.", "output": "mi sona ala."}
+{"instruction": "Traduire en Toki Pona", "input": "La fleur est belle.", "output": "kasi kule li pona lukin."}
+{"instruction": "Traduire en Toki Pona", "input": "Je dors car je suis fatigué.", "output": "mi lape tan ni: mi pini pali."}
+{"instruction": "Traduire en Toki Pona", "input": "L'insecte est petit.", "output": "pipi li lili."}
+{"instruction": "Traduire en Toki Pona", "input": "Je pense donc je suis.", "output": "mi pilin la mi lon."}
+{"instruction": "Traduire en Toki Pona", "input": "Le vent souffle fort.", "output": "kon li tawa suli."}
+{"instruction": "Traduire en Toki Pona", "input": "La pierre est dure.", "output": "kiwen li kiwen."}
+{"instruction": "Traduire en Toki Pona", "input": "Le papier est blanc.", "output": "lipu li walo."}
+{"instruction": "Traduire en Toki Pona", "input": "La forêt est verte.", "output": "ma kasi li laso."}
+{"instruction": "Traduire en Toki Pona", "input": "Je t'aime.", "output": "mi olin e sina."}
+{"instruction": "Traduire en Toki Pona", "input": "Le chemin est long.", "output": "nasin li suli."}
+{"instruction": "Traduire en Toki Pona", "input": "Donne-moi l'outil.", "output": "o pana e ilo tawa mi."}
+{"instruction": "Traduire en Toki Pona", "input": "C'est un bon ordinateur.", "output": "ni li ilo nanpa pona."}
+{"instruction": "Traduire en Toki Pona", "input": "La nuit est silencieuse.", "output": "pimeja li kalama ala."}
+{"instruction": "Traduire en Toki Pona", "input": "Le fruit est rouge.", "output": "kili li loje."}
+{"instruction": "Traduire en Toki Pona", "input": "Le fruit est jaune.", "output": "kili li jelo."}
+{"instruction": "Traduire en Toki Pona", "input": "Le fruit est vert.", "output": "kili li laso."}
+{"instruction": "Traduire en Toki Pona", "input": "Le fruit est noir.", "output": "kili li pimeja."}
