@@ -49,6 +49,5 @@
 {"instruction": "Traduire en Toki Pona", "input": "C'est un bon ordinateur.", "output": "ni li ilo nanpa pona."}
 {"instruction": "Traduire en Toki Pona", "input": "La nuit est silencieuse.", "output": "pimeja li kalama ala."}
 {"instruction": "Traduire en Toki Pona", "input": "Le fruit est rouge.", "output": "kili li loje."}
-{"instruction": "Traduire en Toki Pona", "input": "Le fruit est jaune.", "output": "kili li jelo."}
 {"instruction": "Traduire en Toki Pona", "input": "Le fruit est vert.", "output": "kili li laso."}
 {"instruction": "Traduire en Toki Pona", "input": "Le fruit est noir.", "output": "kili li pimeja."}

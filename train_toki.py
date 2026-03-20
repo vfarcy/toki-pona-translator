@@ -4,7 +4,8 @@ import torch
 # --- 1. PATCH DE SURVIE ULTRA-PRÉCOCE ---
 # On injecte les types manquants AVANT que Unsloth ne commence à scanner Torch
 for i in range(1, 8):
-    setattr(torch, f"int{i}", torch.int8)
+    if not hasattr(torch, f"int{i}"):
+        setattr(torch, f"int{i}", torch.int8)
 
 # On s'assure que même les bibliothèques tierces (torchao) voient ce changement
 sys.modules['torch'] = torch 
@@ -13,6 +14,14 @@ from unsloth import FastLanguageModel
 from datasets import load_dataset
 from trl import SFTTrainer
 from transformers import TrainingArguments
+
+
+def resolve_precision_flags():
+    if not torch.cuda.is_available():
+        return False, False
+    if torch.cuda.is_bf16_supported():
+        return True, False
+    return False, True
 
 # --- 2. CONFIGURATION ---
 max_seq_length = 2048
@@ -45,6 +54,9 @@ def formatting_prompts_func(examples):
 dataset = load_dataset("json", data_files="dataset.jsonl", split="train")
 dataset = dataset.map(formatting_prompts_func, batched = True)
 
+use_bf16, use_fp16 = resolve_precision_flags()
+print(f"Precision activee: bf16={use_bf16}, fp16={use_fp16}")
+
 # --- 4. ENTRAÎNEMENT ---
 trainer = SFTTrainer(
     model = model,
@@ -58,11 +70,14 @@ trainer = SFTTrainer(
         warmup_steps = 5,
         max_steps = 300,
         learning_rate = 2e-4,
-        fp16 = False,
-        bf16 = True,
+        fp16 = use_fp16,
+        bf16 = use_bf16,
         logging_steps = 1,
         output_dir = "outputs",
-        save_strategy = "no",
+        save_strategy = "steps",
+        save_steps = 50,
+        save_total_limit = 2,
+        report_to = "none",
     ),
 )
 

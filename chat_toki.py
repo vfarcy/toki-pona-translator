@@ -18,18 +18,24 @@ try:
     from peft import PeftModel
 except (AttributeError, ModuleNotFoundError) as e:
     print(f"Erreur d'importation : {e}")
-    print("Tentative de contournement en cours...")
+    raise SystemExit("Dependances manquantes ou incompatibles. Reinstalle transformers/peft et relance.")
 
 # --- 2. CONFIGURATION ---
 model_id = "unsloth/llama-3-8b-bnb-4bit"
 lora_path = "toki_lora" 
+
+if not torch.cuda.is_available():
+    raise SystemExit("GPU CUDA requis pour charger ce modele 4bit (unsloth/llama-3-8b-bnb-4bit).")
+
+device = "cuda"
+dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
 
 print("📦 Chargement de l'IA (Patientez environ 15s)...")
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = AutoModelForCausalLM.from_pretrained(
     model_id,
-    torch_dtype=torch.bfloat16,
+    torch_dtype=dtype,
     device_map="auto"
 )
 
@@ -40,7 +46,7 @@ model.eval()
 # --- 3. FONCTION DE TRADUCTION ---
 def traduire(text):
     prompt = f"### Instruction:\nTraduire en Toki Pona\n\n### Input:\n{text}\n\n### Response:\n"
-    inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
+    inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
     with torch.no_grad():
         outputs = model.generate(
